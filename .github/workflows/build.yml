@@ -36,7 +36,7 @@ jobs:
           git clone $GIT_ROOT devtools-frontend/
           cd devtools-frontend/
           gclient sync || true
-          gn gen out/fast-build --args='devtools_skip_typecheck=true'
+          gn gen out/build --args='devtools_skip_typecheck=true'
           autoninja -C out/build/
           tree out/build
 
