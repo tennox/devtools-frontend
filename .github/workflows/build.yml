@@ -50,7 +50,7 @@ jobs:
       with:
         type: 'zip'
         filename: 'release.zip'
-        path: 'out/fast-build'
+        path: 'out/build'
     - name: Upload Release
       if: always()
       uses: ncipollo/release-action@v1.10.0 # https://github.com/marketplace/actions/create-release
