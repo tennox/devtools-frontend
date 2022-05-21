@@ -4,7 +4,46 @@
 !(Screencast)[docs/Screencast Devtools vscodium.webm]
 
 ### Setup
-1. TODO
+1. `wget release.zip`
+2. `unzip release.zip -o ~/.vscode/devtools-frontend` (suggested location)
+3. In your project, add `.vscode/devtools-editor-config.json`:
+    ```json5
+    {
+      "urlHandler": "vscodium",
+      "appCodeURLs": [
+        {
+          "match": "meteor://💻app/",
+          "replace": ""
+        }
+      ]
+    }
+    ```
+4. Add to your `.vscode/launch.json` the chrome arg
+    ```
+    --custom-devtools-frontend=file://${env:HOME}/.vscode/devtools-frontend/
+    ```
+    example:
+    ```json5
+      {
+          "version": "0.2.0",
+          "configurations": [
+              {
+                  "type": "chrome",
+                  "runtimeExecutable": "custom",
+                  "request": "launch",
+                  "name": "Frontend",
+                  "url": "http://localhost:3000",
+                  "webRoot": "${workspaceFolder}",
+                  "userDataDir": "${env:HOME}/.vscode/chrome-data",
+                  "runtimeArgs": [
+                      "--custom-devtools-frontend=file://${env:HOME}/dev/stuff/devtools-frontend/"
+                  ],
+                  "sourceMaps": true,
+                  "timeout": 5000,
+              }
+          ]
+      }
+    ```
 
 # ORIGINAL README:
 

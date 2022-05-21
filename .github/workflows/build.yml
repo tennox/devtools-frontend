@@ -14,15 +14,50 @@ jobs:
       env:
         ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
       with:
-        packages: gn
+        packages: gn,findutils,xz,tree
+        # Disclaimer: wow I really have no idea what's happening with this gn and gclient thing
         script: |
-          git clone https://chromium.googlesource.com/chromium/tools/depot_tools.git /opt/depot_tools
-          export PATH=$(realpath /opt/depot_tools):$PATH
-          gn gen out/fast-build --args='devtools_skip_typecheck=true'; autoninja -C out/fast-build/
+          set -x || true
+          GIT_ROOT=$(pwd)
+          cd /tmp
+          git clone https://chromium.googlesource.com/chromium/tools/depot_tools.git ./depot_tools
+          export PATH=$(realpath ./depot_tools):$PATH
+          gclient root
+          gclient config --spec 'solutions = [
+            {
+              "name": "devtools-frontend",
+              "url": "https://chromium.googlesource.com/devtools/devtools-frontend.git",
+              "deps_file": "DEPS",
+              "managed": False,
+              "custom_deps": {},
+            },
+          ]
+          '
+          git clone $GIT_ROOT devtools-frontend/
+          cd devtools-frontend/
+          gclient sync || true
+          chmod +x ./out/fast-build/third_party/node/linux/node-linux-x64/bin/node || true
+          gn gen out/fast-build --args='devtools_skip_typecheck=true'
+          autoninja -C out/fast-build/
+          tree out/fast-build
 
+    - name: Archive All
+      uses: TheDoctor0/zip-release@0.6.2 # https://github.com/marketplace/actions/zip-release
+      with:
+        type: 'zip'
+        filename: 'all.zip'
     - name: Archive Release
-      uses: thedoctor0/zip-release@main # https://github.com/marketplace/actions/zip-release
+      uses: TheDoctor0/zip-release@0.6.2 # https://github.com/marketplace/actions/zip-release
       with:
         type: 'zip'
         filename: 'release.zip'
-        path: 'out/fast-build/'
+        path: 'out/fast-build'
+    - name: Upload Release
+      uses: ncipollo/release-action@v1.10.0 # https://github.com/marketplace/actions/create-release
+      with:
+        artifacts: "release.zip,all.zip"
+        omitBody: true
+        prerelease: true
+        tag: ${GITHUB_SHA}
+        body: ${{ github.event.pull_request.head.sha }}
+        token: ${{ secrets.GITHUB_TOKEN }}
