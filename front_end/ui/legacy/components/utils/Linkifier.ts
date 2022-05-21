@@ -667,9 +667,10 @@ export class Linkifier implements SDK.TargetManager.Observer {
           if (url && url.startsWith(urlConfig.match)) {
             // docs: https://code.visualstudio.com/docs/editor/command-line#_opening-vs-code-with-urls
             window.open(
-              'vscodium://file' + config.workspacePath
-                + url.replace(urlConfig.match, urlConfig.replace ?? '')
-                + ':' + (lineNumber+1)+ (columnNumber ? ':' + (columnNumber+1) : ''),
+              (config.urlHandler ?? 'vscode')
+              + '://file' + config.workspacePath
+              + url.replace(urlConfig.match, urlConfig.replace ?? '')
+              + ':' + (lineNumber + 1) + (columnNumber ? ':' + (columnNumber + 1) : ''),
               '_self' // other values caused devtools to hang ¯\_(ツ)_/¯
             );
             return true;
