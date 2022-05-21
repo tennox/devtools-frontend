@@ -1,4 +1,12 @@
 # Chrome DevTools frontend
+## PATCHED TO OPEN FILES IN VSCOD{IUM,E}
+
+!(Screencast)[docs/Screencast Devtools vscodium.webm]
+
+### Setup
+1. TODO
+
+# ORIGINAL README:
 
 <!-- [START badges] -->
 
