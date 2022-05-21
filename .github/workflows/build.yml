@@ -39,18 +39,29 @@ jobs:
           gn gen out/build --args='devtools_skip_typecheck=true'
           autoninja -C out/build/
           tree out/build
+          mv out/build devtools-frontend
 
     - name: Archive All
       uses: thedoctor0/zip-release@09336613be18a8208dfa66bd57efafd9e2685657 # https://github.com/marketplace/actions/zip-release
       with:
         type: 'zip'
         filename: 'all.zip'
-    - name: Archive Release
-      uses: thedoctor0/zip-release@09336613be18a8208dfa66bd57efafd9e2685657 # https://github.com/marketplace/actions/zip-release
+    - uses: papeloto/action-zip@v1
       with:
-        type: 'zip'
-        filename: 'release.zip'
-        path: 'out/build'
+        files: devtools-frontend
+        dest: release.zip
+    - uses: actions/upload-artifact@v1
+      with:
+        name: release
+        path: ${{ github.workspace }}/release.zip
+
+    - name: Set outputs
+      id: vars
+      run: echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
+    - name: Check outputs
+      run: echo ${{ steps.vars.outputs.sha_short }}
+
+
     - name: Upload Release
       if: always()
       uses: ncipollo/release-action@v1.10.0 # https://github.com/marketplace/actions/create-release
@@ -58,6 +69,6 @@ jobs:
         artifacts: "*.zip"
         omitBody: true
         prerelease: true
-        tag: ${{ github.sha }}
+        tag: ${{ steps.vars.outputs.sha_short }}
         body: ${{ github.event.pull_request.head.sha }}
         token: ${{ secrets.GITHUB_TOKEN }}
