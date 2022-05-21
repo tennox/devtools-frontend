@@ -233,6 +233,7 @@ let workspaceInstance: WorkspaceImpl|undefined;
 
 export class WorkspaceImpl extends Common.ObjectWrapper.ObjectWrapper<EventTypes> {
   private projectsInternal: Map<string, Project>;
+  editorConfigs: Array<Record<string, any>> = [];
   private hasResourceContentTrackingExtensionsInternal: boolean;
 
   private constructor() {
@@ -301,6 +302,25 @@ export class WorkspaceImpl extends Common.ObjectWrapper.ObjectWrapper<EventTypes
     console.assert(!this.projectsInternal.has(project.id()), `A project with id ${project.id()} already exists!`);
     this.projectsInternal.set(project.id(), project);
     this.dispatchEventToListeners(Events.ProjectAdded, project);
+
+    // Detect if the workspace has a devtools-editor-config.json
+    if (project.type() === "filesystem") {
+      // Check for editor config
+      // @ts-expect-error
+      project.onPopulatedCallbacks!.push(async (fs: FileSystem) => {
+        // @ts-expect-error
+        const files = fs.uiSourceCodesList
+        const configMatches = files.filter((sc: any) => sc.url().endsWith('.vscode/devtools-editor-config.json'))
+        console.log('configMatches', configMatches, fs);
+        if (configMatches.length) {
+          const { content } = await configMatches[0].requestContent();
+          console.log('READ CONFIG:', content)
+          const config = JSON.parse(content);
+          if (!config.workspacePath) config.workspacePath = (fs as any).fileSystemBaseURL.replace('file://','');
+          this.editorConfigs.push(config);
+        }
+      })
+    }
   }
 
   removeProject(project: Project): void {

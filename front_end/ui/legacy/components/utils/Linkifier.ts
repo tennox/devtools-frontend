@@ -653,6 +653,30 @@ export class Linkifier implements SDK.TargetManager.Observer {
       return false;
     }
     const linkInfo = Linkifier.linkInfo(link);
+    // console.log('Workspace', Workspace)
+    // console.log('WorkspaceImpl', Workspace.Workspace.WorkspaceImpl)
+    // console.log('WorkspaceImp.i', Workspace.Workspace.WorkspaceImpl.instance())
+    if (Workspace.Workspace.WorkspaceImpl.instance().editorConfigs.length) {
+      const config = Workspace.Workspace.WorkspaceImpl.instance().editorConfigs[0]
+      const url = linkInfo && linkInfo.uiLocation && linkInfo.uiLocation.uiSourceCode.url();
+      console.trace('click', url, linkInfo, config);
+      if (url && config.appCodeURLs) {
+        const { lineNumber, columnNumber } = linkInfo.uiLocation!;
+        for (const urlConfig of config.appCodeURLs) {
+          console.log('urlConfig', urlConfig);
+          if (url && url.startsWith(urlConfig.match)) {
+            // docs: https://code.visualstudio.com/docs/editor/command-line#_opening-vs-code-with-urls
+            window.open(
+              'vscodium://file' + config.workspacePath
+                + url.replace(urlConfig.match, urlConfig.replace ?? '')
+                + ':' + (lineNumber+1)+ (columnNumber ? ':' + (columnNumber+1) : ''),
+              '_self' // other values caused devtools to hang ¯\_(ツ)_/¯
+            );
+            return true;
+          }
+        }
+      }
+    }
     if (!linkInfo) {
       return false;
     }

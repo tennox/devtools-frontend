@@ -161,6 +161,9 @@ export class FileSystem extends Workspace.Workspace.ProjectStore {
   private readonly fileSystemWorkspaceBinding: FileSystemWorkspaceBinding;
   private readonly fileSystemPathInternal: Platform.DevToolsPath.UrlString;
   private readonly creatingFilesGuard: Set<string>;
+  /** As long as it's an array, it's still populating, and you can add your callback, afterwards - set to null */
+  onPopulatedCallbacks: Array<Function>|null = [];
+
   constructor(
       fileSystemWorkspaceBinding: FileSystemWorkspaceBinding, isolatedFileSystem: PlatformFileSystem,
       workspace: Workspace.Workspace.WorkspaceImpl) {
@@ -337,6 +340,9 @@ export class FileSystem extends Workspace.Workspace.ProjectStore {
       }
       if (to < filePaths.length) {
         window.setTimeout(reportFileChunk.bind(this, to), 100);
+      } else if (this.onPopulatedCallbacks) {
+        this.onPopulatedCallbacks.forEach(cb => cb(this));
+        this.onPopulatedCallbacks = null;
       }
     }
   }
