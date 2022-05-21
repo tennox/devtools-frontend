@@ -38,26 +38,30 @@ jobs:
           gclient sync || true
           gn gen out/build --args='devtools_skip_typecheck=true'
           autoninja -C out/build/
-          tree out/build
+          pwd
+          tree out/build/
+          mv out/build/gen/front_end devtools-frontend
+          zip -r release.zip devtools-frontend/
 
-    - name: Archive All
-      uses: thedoctor0/zip-release@09336613be18a8208dfa66bd57efafd9e2685657 # https://github.com/marketplace/actions/zip-release
-      with:
-        type: 'zip'
-        filename: 'all.zip'
-    - name: Archive Release
-      uses: thedoctor0/zip-release@09336613be18a8208dfa66bd57efafd9e2685657 # https://github.com/marketplace/actions/zip-release
-      with:
-        type: 'zip'
-        filename: 'release.zip'
-        path: 'out/build'
+    # - uses: actions/upload-artifact@v1
+    #   with:
+    #     name: release
+    #     path: /tmp/devtools-frontend/release.zip
+
+    # https://stackoverflow.com/a/59819441/1633985
+    - name: Make short sha
+      id: vars
+      run: echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
+    - name: Print short sha
+      run: echo ${{ steps.vars.outputs.sha_short }}
+
     - name: Upload Release
-      if: always()
+      # if: always()
       uses: ncipollo/release-action@v1.10.0 # https://github.com/marketplace/actions/create-release
       with:
-        artifacts: "*.zip"
+        artifacts: "/tmp/devtools-frontend/*.zip"
         omitBody: true
         prerelease: true
-        tag: ${{ github.sha }}
+        tag: ${{ steps.vars.outputs.sha_short }}
         body: ${{ github.event.pull_request.head.sha }}
         token: ${{ secrets.GITHUB_TOKEN }}
