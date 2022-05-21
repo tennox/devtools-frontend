@@ -58,6 +58,6 @@ jobs:
         artifacts: "*.zip"
         omitBody: true
         prerelease: true
-        tag: ${GITHUB_SHA}
+        tag: ${{ github.sha }}
         body: ${{ github.event.pull_request.head.sha }}
         token: ${{ secrets.GITHUB_TOKEN }}

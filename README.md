@@ -44,6 +44,13 @@
           ]
       }
     ```
+5. Launch chromium
+6. Open Devtools
+7. In devtools settings, add your project directory as Workspace
+  (the directory must contain `.vscode/devtools-editor-config.json` file)
+8. Workaround for [#1](https://github.com/tennox/devtools-frontend/issues/1):
+  1. undock devtools
+  2. re-dock (optional)
 
 # ORIGINAL README:
 
