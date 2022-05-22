@@ -65,7 +65,7 @@ Clicking on Filenames in the console will open the location via `vscodium://file
 - `appCodeURLs` - configure how to change URLs so that they point to the file relative to your workspace root
   - `match` - which URLs to match - you see it when hovering over the filename in console
   - `replace` - replace the matched part so that the path points to the file relative from your workspace root 
-- ``
+- (optional) `workspacePath` - if, for any reason, you need to overwrite the workspace path ¯\\_(ツ)_/¯
 
 # ORIGINAL README:
 
