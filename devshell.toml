@@ -1,0 +1,17 @@
+# https://numtide.github.io/devshell
+
+[devshell]
+packages = [
+  "gn",
+]
+
+# [[commands]]
+# package = "devshell.cli"
+# help = "Per project developer environments"
+# [[commands]]
+# package = "nodejs" # =LTS, for specific version use e.g.: `nodejs-17_x` - https://search.nixos.org/packages?type=packages&query=nodejs
+# name = "node"
+# help = "NodeJS"
+# [[commands]]
+# package = "yarn"
+# help = "Yarn package manager"

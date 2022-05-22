@@ -11,8 +11,9 @@ Clicking on Filenames in the console will open the location via `vscodium://file
 
 
 ### Setup
-1. `wget release.zip`
-2. `unzip release.zip -o ~/.vscode/devtools-frontend` (suggested location)
+1. Download [latest `release.zip`](https://github.com/tennox/devtools-frontend/releases):
+2. Unzip to a location of your choice:
+    `unzip release.zip -d ~/.vscode/` (unzips to `~/.vscode/devtools-frontend/`)
 3. In your project, add `.vscode/devtools-editor-config.json`:
     ```json5
     {
@@ -53,19 +54,26 @@ Clicking on Filenames in the console will open the location via `vscodium://file
     ```
 5. Launch chromium
 6. Open Devtools
-7. In devtools settings, add your project directory as Workspace  
+<<<<<<< HEAD
+7. In devtools settings, add your project directory as Workspace
+=======
+7. In devtools settings, add your project directory as **Workspace**
+>>>>>>> 652fdb9e0 (Readme: Update unzip instructions)
     (the directory must contain `.vscode/devtools-editor-config.json` file)
 8. Workaround for [#1](https://github.com/tennox/devtools-frontend/issues/1):
     1. undock devtools
     2. re-dock (optional)
+<<<<<<< HEAD
 
 ### Config details
 
 - `urlHandler` - which url is handled by your instance, e.g.: `vscode`, `vscodium`, `vscode-insiders`
 - `appCodeURLs` - configure how to change URLs so that they point to the file relative to your workspace root
   - `match` - which URLs to match - you see it when hovering over the filename in console
-  - `replace` - replace the matched part so that the path points to the file relative from your workspace root 
+  - `replace` - replace the matched part so that the path points to the file relative from your workspace root
 - (optional) `workspacePath` - if, for any reason, you need to overwrite the workspace path ¯\\_(ツ)_/¯
+=======
+>>>>>>> 652fdb9e0 (Readme: Update unzip instructions)
 
 # ORIGINAL README:
 
