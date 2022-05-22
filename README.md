@@ -1,7 +1,14 @@
 # Chrome DevTools frontend
 ## PATCHED TO OPEN FILES IN VSCOD{IUM,E}
 
-!(Screencast)[docs/Screencast Devtools vscodium.webm]
+**Disclaimer**: This is in a hacked-together Proof-of-concept state. YMMV
+
+Clicking on Filenames in the console will open the location via `vscodium://file/project/path`:
+
+![Screenshot](https://user-images.githubusercontent.com/2084639/169710810-96332c9e-ca06-41d2-9d03-d255c82accc2.png)
+
+[Screencast](./docs/Screencast%20Devtools%20vscodium.webm)
+
 
 ### Setup
 1. `wget release.zip`
@@ -46,11 +53,19 @@
     ```
 5. Launch chromium
 6. Open Devtools
-7. In devtools settings, add your project directory as Workspace
-  (the directory must contain `.vscode/devtools-editor-config.json` file)
+7. In devtools settings, add your project directory as Workspace  
+    (the directory must contain `.vscode/devtools-editor-config.json` file)
 8. Workaround for [#1](https://github.com/tennox/devtools-frontend/issues/1):
-  1. undock devtools
-  2. re-dock (optional)
+    1. undock devtools
+    2. re-dock (optional)
+
+### Config details
+
+- `urlHandler` - which url is handled by your instance, e.g.: `vscode`, `vscodium`, `vscode-insiders`
+- `appCodeURLs` - configure how to change URLs so that they point to the file relative to your workspace root
+  - `match` - which URLs to match - you see it when hovering over the filename in console
+  - `replace` - replace the matched part so that the path points to the file relative from your workspace root 
+- ``
 
 # ORIGINAL README:
 
